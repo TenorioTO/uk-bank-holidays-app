@@ -1,5 +1,6 @@
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { styles } from "./containerStyles";
+import { View } from "react-native";
 
 export default function Container({
   style,
@@ -8,7 +9,11 @@ export default function Container({
   style?: object;
   children: React.ReactNode;
 }) {
+  const { bottom } = useSafeAreaInsets();
+
   return (
-    <SafeAreaView style={[styles.container, style]}>{children}</SafeAreaView>
+    <View style={[styles.container, { paddingBottom: bottom }, style]}>
+      {children}
+    </View>
   );
 }
