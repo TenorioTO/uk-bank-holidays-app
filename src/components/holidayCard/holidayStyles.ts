@@ -23,4 +23,36 @@ export const styles = StyleSheet.create({
     marginTop: Spacing.xSmall,
     fontStyle: "italic",
   },
+  cardActions: {
+    flexDirection: "row" as const,
+    gap: Spacing.small,
+    marginTop: Spacing.small,
+  },
+  button: {
+    borderRadius: Spacing.xSmall,
+    paddingVertical: Spacing.small,
+    alignItems: "center" as const,
+  },
+  editButton: {
+    backgroundColor: "#f0f0f0",
+    paddingHorizontal: Spacing.medium,
+  },
+  editButtonText: {
+    color: "#333",
+  },
+  calendarButton: {
+    flex: 1,
+    backgroundColor: "#007AFF",
+  },
+  buttonSaved: {
+    backgroundColor: "#e8f5e9",
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: FontSize.regular,
+    fontWeight: "600" as const,
+  },
+  buttonTextSaved: {
+    color: "#2e7d32",
+  },
 });
