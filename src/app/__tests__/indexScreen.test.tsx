@@ -1,10 +1,20 @@
-import { screen } from "@testing-library/react-native";
+import { screen, fireEvent } from "@testing-library/react-native";
 import Index from "../index";
 import { useBankHolidays } from "../../hooks/useBankHolidays";
 import { BankHolidayEvent } from "../../types/bankHolidays";
 import { renderScreen } from "../../test/renderScreen";
+import { useQueryClient } from "@tanstack/react-query";
 
 jest.mock("../../hooks/useBankHolidays");
+jest.mock("@tanstack/react-query", () => ({
+  ...jest.requireActual("@tanstack/react-query"),
+  useQueryClient: jest.fn(),
+}));
+
+const mockInvalidateQueries = jest.fn();
+const mockUseQueryClient = useQueryClient as jest.MockedFunction<
+  typeof useQueryClient
+>;
 
 const mockUseBankHolidays = useBankHolidays as jest.MockedFunction<
   typeof useBankHolidays
@@ -29,6 +39,7 @@ function mockHookReturn(
     data: undefined,
     isPending: false,
     isError: false,
+    isRefetching: false,
     ...overrides,
   } as ReturnType<typeof useBankHolidays>);
 }
@@ -36,6 +47,9 @@ function mockHookReturn(
 describe("Index screen", () => {
   beforeEach(() => {
     mockHookReturn({ data: [makeEvent()] });
+    mockUseQueryClient.mockReturnValue({
+      invalidateQueries: mockInvalidateQueries,
+    } as unknown as ReturnType<typeof useQueryClient>);
   });
 
   it("shows a loading indicator while data is pending", () => {
@@ -94,5 +108,20 @@ describe("Index screen", () => {
     renderScreen(<Index />);
 
     expect(screen.getByText("Substitute day")).toBeTruthy();
+  });
+
+  it("invalidates the cache and clears local edits when the user pulls to refresh", () => {
+    mockHookReturn({
+      data: [makeEvent({ title: "Good Friday", date: "2026-04-03" })],
+    });
+
+    renderScreen(<Index />);
+
+    const flatList = screen.UNSAFE_getByType(require("react-native").FlatList);
+    fireEvent(flatList, "refresh");
+
+    expect(mockInvalidateQueries).toHaveBeenCalledWith({
+      queryKey: ["bankHolidays"],
+    });
   });
 });
