@@ -17,7 +17,10 @@ export default function HolidayCard({ holiday, onEdit }: HolidayCardProps) {
 
   return (
     <View style={styles.card}>
-      <Text style={styles.title}>{holiday.title}</Text>
+      <View style={styles.titleRow}>
+        <Text style={styles.title}>{holiday.title}</Text>
+        {holiday.bunting && <View style={styles.buntingBadge} />}
+      </View>
       <Text style={styles.date}>{formattedDate}</Text>
       {holiday.notes !== "" && (
         <Text style={styles.notes}>{holiday.notes}</Text>
