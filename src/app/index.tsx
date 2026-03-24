@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { ActivityIndicator, FlatList, Text } from "react-native";
+import { ActivityIndicator, FlatList, Text, View } from "react-native";
 import Container from "../components/container/Container";
 import { useBankHolidays } from "../hooks/useBankHolidays";
 import { useHolidayEdits } from "../context/HolidayEditsContext";
@@ -48,6 +48,12 @@ export default function Index() {
         renderItem={({ item }) => (
           <HolidayCard holiday={item} onEdit={setEditing} />
         )}
+        ListHeaderComponent={
+          <View style={styles.listHeader}>
+            <Text style={styles.subtitle}>Upcoming holidays</Text>
+          </View>
+        }
+        showsVerticalScrollIndicator={false}
       />
       {editing && (
         <EditHolidayModal

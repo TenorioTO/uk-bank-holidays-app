@@ -1,58 +1,86 @@
-import { StyleSheet } from "react-native";
-import { FontSize, Spacing } from "../../theme/variables";
+import { Platform, StyleSheet } from "react-native";
+import { BorderRadius, Colors, FontSize, Spacing } from "../../theme/variables";
 
 export const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#f8f9fa",
-    borderRadius: Spacing.small,
-    padding: Spacing.medium,
-    marginBottom: Spacing.small,
+    backgroundColor: Colors.cardBackground,
+    borderRadius: BorderRadius.medium,
+    padding: Spacing.large,
+    marginBottom: Spacing.regular,
+    borderLeftWidth: 4,
+    borderLeftColor: Colors.accent,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.08,
+        shadowRadius: Spacing.small,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  titleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.small,
   },
   title: {
-    fontSize: FontSize.titles,
-    fontWeight: "600",
+    fontSize: FontSize.large,
+    fontWeight: "700",
+    color: Colors.textPrimary,
+    flex: 1,
+  },
+  buntingBadge: {
+    backgroundColor: Colors.gold,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
   },
   date: {
     fontSize: FontSize.regular,
-    color: "#555",
-    marginTop: Spacing.xSmall,
+    color: Colors.textSecondary,
+    marginTop: Spacing.small,
   },
   notes: {
     fontSize: FontSize.regular,
-    color: "#888",
+    color: Colors.textMuted,
     marginTop: Spacing.xSmall,
     fontStyle: "italic",
   },
   cardActions: {
-    flexDirection: "row" as const,
+    flexDirection: "row",
     gap: Spacing.small,
-    marginTop: Spacing.small,
+    marginTop: Spacing.medium,
   },
   button: {
-    borderRadius: Spacing.xSmall,
-    paddingVertical: Spacing.small,
-    alignItems: "center" as const,
+    borderRadius: BorderRadius.small,
+    paddingVertical: Spacing.regular,
+    alignItems: "center",
   },
   editButton: {
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "transparent",
+    borderWidth: 1,
+    borderColor: Colors.border,
     paddingHorizontal: Spacing.medium,
   },
   editButtonText: {
-    color: "#333",
+    color: Colors.textSecondary,
   },
   calendarButton: {
     flex: 1,
-    backgroundColor: "#007AFF",
+    backgroundColor: Colors.navy,
   },
   buttonSaved: {
-    backgroundColor: "#e8f5e9",
+    backgroundColor: Colors.successLight,
   },
   buttonText: {
-    color: "#fff",
+    color: Colors.white,
     fontSize: FontSize.regular,
-    fontWeight: "600" as const,
+    fontWeight: "600",
   },
   buttonTextSaved: {
-    color: "#2e7d32",
+    color: Colors.success,
   },
 });
