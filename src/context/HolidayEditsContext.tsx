@@ -9,21 +9,22 @@ import { BankHolidayEvent } from "../types/bankHolidays";
 
 type Edits = Record<string, BankHolidayEvent>;
 
-type Action = {
-  type: "UPDATE";
-  originalKey: string;
-  updated: BankHolidayEvent;
-};
+type Action =
+  | { type: "UPDATE"; originalKey: string; updated: BankHolidayEvent }
+  | { type: "CLEAR" };
 
 const EditsContext = createContext<{
   applyEdits: (holidays: BankHolidayEvent[]) => BankHolidayEvent[];
   updateHoliday: (originalKey: string, updated: BankHolidayEvent) => void;
+  clearEdits: () => void;
 } | null>(null);
 
 function editsReducer(state: Edits, action: Action): Edits {
   switch (action.type) {
     case "UPDATE":
       return { ...state, [action.originalKey]: action.updated };
+    case "CLEAR":
+      return {};
   }
 }
 
@@ -50,9 +51,13 @@ export function HolidayEditsProvider({
     [],
   );
 
+  const clearEdits = useCallback(() => {
+    dispatch({ type: "CLEAR" });
+  }, []);
+
   const value = useMemo(
-    () => ({ applyEdits, updateHoliday }),
-    [applyEdits, updateHoliday],
+    () => ({ applyEdits, updateHoliday, clearEdits }),
+    [applyEdits, updateHoliday, clearEdits],
   );
 
   return (

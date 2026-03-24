@@ -43,7 +43,7 @@ describe("EditHolidayModal", () => {
 
     expect(screen.getByText("Edit Holiday")).toBeTruthy();
     expect(screen.getByDisplayValue("Good Friday")).toBeTruthy();
-    expect(screen.getByDisplayValue("2026-04-03")).toBeTruthy();
+    expect(screen.getByDisplayValue("03-04-2026")).toBeTruthy();
   });
 
   it("calls onSave and onClose when validation passes", () => {
@@ -123,7 +123,7 @@ describe("EditHolidayModal", () => {
     fireEvent.press(screen.getByText("Save"));
     expect(screen.getByText("Please enter a valid date.")).toBeTruthy();
 
-    fireEvent.changeText(screen.getByDisplayValue("2026-04-03"), "2026-05-01");
+    fireEvent.changeText(screen.getByDisplayValue("03-04-2026"), "01-05-2026");
 
     expect(screen.queryByText("Please enter a valid date.")).toBeNull();
   });
@@ -144,7 +144,7 @@ describe("EditHolidayModal", () => {
     renderScreen(<EditHolidayModal {...defaultProps} onSave={onSave} />);
 
     fireEvent.changeText(screen.getByDisplayValue("Good Friday"), "May Day");
-    fireEvent.changeText(screen.getByDisplayValue("2026-04-03"), "2026-05-04");
+    fireEvent.changeText(screen.getByDisplayValue("03-04-2026"), "04-05-2026");
     fireEvent.changeText(
       screen.getByPlaceholderText("Optional notes"),
       "Edited note",

@@ -3,6 +3,7 @@ import { Modal, View, Text, TextInput, Pressable } from "react-native";
 import { styles } from "./editHolidayModalStyles";
 import { BankHolidayEvent } from "../../types/bankHolidays";
 import { validateHolidayEdit } from "../../utils/validateHolidayEdit";
+import { toDisplayDate, toApiDate } from "../../utils/dateFormat";
 
 interface EditHolidayModalProps {
   holiday: BankHolidayEvent;
@@ -18,7 +19,7 @@ export default function EditHolidayModal({
   onSave,
 }: EditHolidayModalProps) {
   const [title, setTitle] = useState(holiday.title);
-  const [date, setDate] = useState(holiday.date);
+  const [date, setDate] = useState(toDisplayDate(holiday.date));
   const [notes, setNotes] = useState(holiday.notes);
   const [errors, setErrors] = useState<{ title?: string; date?: string }>({});
 
@@ -33,7 +34,7 @@ export default function EditHolidayModal({
       return;
     }
 
-    onSave({ ...holiday, title: title.trim(), date, notes });
+    onSave({ ...holiday, title: title.trim(), date: toApiDate(date), notes });
     onClose();
   };
 
@@ -55,7 +56,7 @@ export default function EditHolidayModal({
           />
           {errors.title && <Text style={styles.error}>{errors.title}</Text>}
 
-          <Text style={styles.label}>Date (YYYY-MM-DD)</Text>
+          <Text style={styles.label}>Date (DD-MM-YYYY)</Text>
           <TextInput
             style={[styles.input, errors.date ? styles.inputError : undefined]}
             value={date}
@@ -63,7 +64,7 @@ export default function EditHolidayModal({
               setDate(value);
               setErrors((prev) => ({ ...prev, date: undefined }));
             }}
-            placeholder="2026-04-03"
+            placeholder="03-04-2026"
           />
           {errors.date && <Text style={styles.error}>{errors.date}</Text>}
 

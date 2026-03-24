@@ -1,4 +1,5 @@
-import { addMonths, isWithinInterval, parseISO } from "date-fns";
+import { addMonths, isWithinInterval, parse, isValid } from "date-fns";
+import { DISPLAY_FORMAT } from "./dateFormat";
 
 interface ValidationResult {
   valid: boolean;
@@ -16,8 +17,8 @@ export function validateHolidayEdit(
     errors.title = "Title cannot be empty.";
   }
 
-  const parsed = parseISO(date);
-  if (isNaN(parsed.getTime())) {
+  const parsed = parse(date, DISPLAY_FORMAT, new Date());
+  if (!isValid(parsed)) {
     errors.date = "Please enter a valid date.";
   } else if (
     !isWithinInterval(parsed, { start: now, end: addMonths(now, 6) })

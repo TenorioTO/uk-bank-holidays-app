@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { ActivityIndicator, FlatList, Text, View } from "react-native";
+import { useQueryClient } from "@tanstack/react-query";
 import Container from "../components/container/Container";
 import { useBankHolidays } from "../hooks/useBankHolidays";
 import { useHolidayEdits } from "../context/HolidayEditsContext";
@@ -9,9 +10,15 @@ import EditHolidayModal from "../components/editHolidayModal/EditHolidayModal";
 import { BankHolidayEvent } from "../types/bankHolidays";
 
 export default function Index() {
-  const { data, isPending, isError } = useBankHolidays();
-  const { applyEdits, updateHoliday } = useHolidayEdits();
+  const { data, isPending, isError, isRefetching } = useBankHolidays();
+  const queryClient = useQueryClient();
+  const { applyEdits, updateHoliday, clearEdits } = useHolidayEdits();
   const [editing, setEditing] = useState<BankHolidayEvent | null>(null);
+
+  const handleRefresh = useCallback(() => {
+    clearEdits();
+    queryClient.invalidateQueries({ queryKey: ["bankHolidays"] });
+  }, [clearEdits, queryClient]);
 
   const handleSave = useCallback(
     (updated: BankHolidayEvent) => {
@@ -53,6 +60,8 @@ export default function Index() {
             <Text style={styles.subtitle}>Upcoming holidays</Text>
           </View>
         }
+        onRefresh={handleRefresh}
+        refreshing={isRefetching}
         showsVerticalScrollIndicator={false}
       />
       {editing && (
